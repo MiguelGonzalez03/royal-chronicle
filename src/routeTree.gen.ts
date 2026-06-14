@@ -19,6 +19,7 @@ import { Route as AuthenticatedCommunityRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
 import { Route as AuthenticatedCommunityIndexRouteImport } from './routes/_authenticated/community.index'
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
+import { Route as AuthenticatedCommunityCategoryRouteImport } from './routes/_authenticated/community.$category'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -70,6 +71,12 @@ const AuthenticatedNewsIdRoute = AuthenticatedNewsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthenticatedNewsRoute,
 } as any)
+const AuthenticatedCommunityCategoryRoute =
+  AuthenticatedCommunityCategoryRouteImport.update({
+    id: '/$category',
+    path: '/$category',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof AuthenticatedCommunityRouteWithChildren
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
+  '/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community/': typeof AuthenticatedCommunityIndexRoute
 }
@@ -89,6 +97,7 @@ export interface FileRoutesByTo {
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
+  '/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community': typeof AuthenticatedCommunityIndexRoute
 }
@@ -102,6 +111,7 @@ export interface FileRoutesById {
   '/_authenticated/dlcs': typeof AuthenticatedDlcsRoute
   '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
   '/_authenticated/community/': typeof AuthenticatedCommunityIndexRoute
 }
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/dlcs'
     | '/news'
+    | '/community/$category'
     | '/news/$id'
     | '/community/'
   fileRoutesByTo: FileRoutesByTo
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/dlcs'
     | '/news'
     | '/'
+    | '/community/$category'
     | '/news/$id'
     | '/community'
   id:
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dlcs'
     | '/_authenticated/news'
     | '/_authenticated/'
+    | '/_authenticated/community/$category'
     | '/_authenticated/news/$id'
     | '/_authenticated/community/'
   fileRoutesById: FileRoutesById
@@ -219,15 +232,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNewsIdRouteImport
       parentRoute: typeof AuthenticatedNewsRoute
     }
+    '/_authenticated/community/$category': {
+      id: '/_authenticated/community/$category'
+      path: '/$category'
+      fullPath: '/community/$category'
+      preLoaderRoute: typeof AuthenticatedCommunityCategoryRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
+    }
   }
 }
 
 interface AuthenticatedCommunityRouteChildren {
+  AuthenticatedCommunityCategoryRoute: typeof AuthenticatedCommunityCategoryRoute
   AuthenticatedCommunityIndexRoute: typeof AuthenticatedCommunityIndexRoute
 }
 
 const AuthenticatedCommunityRouteChildren: AuthenticatedCommunityRouteChildren =
   {
+    AuthenticatedCommunityCategoryRoute: AuthenticatedCommunityCategoryRoute,
     AuthenticatedCommunityIndexRoute: AuthenticatedCommunityIndexRoute,
   }
 
