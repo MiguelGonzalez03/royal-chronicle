@@ -164,8 +164,6 @@
   position: relative;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
-}
-@utility divider-ornate {
   &::before {
     content: "❖";
     position: absolute;
