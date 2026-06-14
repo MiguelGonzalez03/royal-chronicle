@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+const NAV: Array<{ to: string; label: string; icon: typeof Crown; exact?: boolean }> = [
   { to: "/", label: "Inicio", icon: Crown, exact: true },
   { to: "/news", label: "Noticias", icon: Newspaper },
   { to: "/dlcs", label: "DLCs", icon: Package },
@@ -24,7 +24,7 @@ const NAV = [
   { to: "/guides", label: "Guías", icon: BookOpen },
   { to: "/characters", label: "Personajes", icon: Swords },
   { to: "/profile", label: "Perfil", icon: UserIcon },
-] as const;
+];
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -50,9 +50,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             {NAV.map((item) => (
               <Link
                 key={item.to}
-                to={item.to}
+                to={item.to as any}
                 activeProps={{ className: "text-gold bg-secondary/60" }}
-                activeOptions={{ exact: item.exact }}
+                activeOptions={{ exact: item.exact ?? false }}
                 className="px-3 py-2 rounded-md text-sm font-medium text-foreground/80 hover:text-gold hover:bg-secondary/40 transition flex items-center gap-2"
               >
                 <item.icon className="h-4 w-4" />
@@ -82,9 +82,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               {NAV.map((item) => (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  to={item.to as any}
                   activeProps={{ className: "text-gold bg-secondary/60" }}
-                  activeOptions={{ exact: item.exact }}
+                  activeOptions={{ exact: item.exact ?? false }}
                   className="px-3 py-3 rounded-md text-sm font-medium flex items-center gap-3 hover:bg-secondary/40"
                 >
                   <item.icon className="h-4 w-4" />
