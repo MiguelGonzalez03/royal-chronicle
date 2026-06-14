@@ -1,1 +1,0 @@
-import{t as e}from"./useQuery-BWAFMGXC.js";import{T as t}from"./index-DJznnac9.js";function n(){return e({queryKey:[`currentUser`],queryFn:async()=>{let{data:e}=await t.auth.getUser();return e.user},staleTime:6e4})}export{n as t};
