@@ -6,4 +6,6 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // OBLIGAMOS A ACTIVAR EL MOTOR DE DESPLIEGUE
+  nitro: true,
 });
