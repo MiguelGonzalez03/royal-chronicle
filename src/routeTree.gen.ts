@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
+import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -39,32 +40,40 @@ const AuthenticatedNewsRoute = AuthenticatedNewsRouteImport.update({
   path: '/news',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNewsIdRoute = AuthenticatedNewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedNewsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/news': typeof AuthenticatedNewsRoute
+  '/news': typeof AuthenticatedNewsRouteWithChildren
+  '/news/$id': typeof AuthenticatedNewsIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/news': typeof AuthenticatedNewsRoute
+  '/news': typeof AuthenticatedNewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
+  '/news/$id': typeof AuthenticatedNewsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/_authenticated/news': typeof AuthenticatedNewsRoute
+  '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/news'
+  fullPaths: '/' | '/auth' | '/reset-password' | '/news' | '/news/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/reset-password' | '/news' | '/'
+  to: '/auth' | '/reset-password' | '/news' | '/' | '/news/$id'
   id:
     | '__root__'
     | '/_authenticated'
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/news'
     | '/_authenticated/'
+    | '/_authenticated/news/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,16 +127,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNewsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/news/$id': {
+      id: '/_authenticated/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof AuthenticatedNewsIdRouteImport
+      parentRoute: typeof AuthenticatedNewsRoute
+    }
   }
 }
 
+interface AuthenticatedNewsRouteChildren {
+  AuthenticatedNewsIdRoute: typeof AuthenticatedNewsIdRoute
+}
+
+const AuthenticatedNewsRouteChildren: AuthenticatedNewsRouteChildren = {
+  AuthenticatedNewsIdRoute: AuthenticatedNewsIdRoute,
+}
+
+const AuthenticatedNewsRouteWithChildren =
+  AuthenticatedNewsRoute._addFileChildren(AuthenticatedNewsRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedNewsRoute: typeof AuthenticatedNewsRoute
+  AuthenticatedNewsRoute: typeof AuthenticatedNewsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedNewsRoute: AuthenticatedNewsRoute,
+  AuthenticatedNewsRoute: AuthenticatedNewsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
