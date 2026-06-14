@@ -1,4 +1,5 @@
 import { o as NullProtoObj } from "./h3+rou3+srvx.mjs";
+import { PassThrough, Readable } from "node:stream";
 //#region node_modules/h3-v2/node_modules/srvx/dist/_chunks/_url.mjs
 function lazyInherit(target, source, sourceKey) {
 	for (const key of [...Object.getOwnPropertyNames(source), ...Object.getOwnPropertySymbols(source)]) {
@@ -143,8 +144,120 @@ var FastURL = /* @__PURE__ */ (() => {
 	return FastURL;
 })();
 //#endregion
-//#region node_modules/h3-v2/node_modules/srvx/dist/adapters/bun.mjs
-var FastResponse = Response;
+//#region node_modules/h3-v2/node_modules/srvx/dist/adapters/node.mjs
+/**
+* Fast Response for Node.js runtime
+*
+* It is faster because in most cases it doesn't create a full Response instance.
+*/
+var NodeResponse = /* @__PURE__ */ (() => {
+	const NativeResponse = globalThis.Response;
+	const STATUS_CODES = globalThis.process?.getBuiltinModule?.("node:http")?.STATUS_CODES || {};
+	class NodeResponse {
+		#body;
+		#init;
+		#headers;
+		#response;
+		constructor(body, init) {
+			this.#body = body;
+			this.#init = init;
+		}
+		static [Symbol.hasInstance](val) {
+			return val instanceof NativeResponse;
+		}
+		get status() {
+			return this.#response?.status || this.#init?.status || 200;
+		}
+		get statusText() {
+			return this.#response?.statusText || this.#init?.statusText || STATUS_CODES[this.status] || "";
+		}
+		get headers() {
+			if (this.#response) return this.#response.headers;
+			if (this.#headers) return this.#headers;
+			const initHeaders = this.#init?.headers;
+			return this.#headers = initHeaders instanceof Headers ? initHeaders : new Headers(initHeaders);
+		}
+		get ok() {
+			if (this.#response) return this.#response.ok;
+			const status = this.status;
+			return status >= 200 && status < 300;
+		}
+		get _response() {
+			if (this.#response) return this.#response;
+			let body = this.#body;
+			if (body && typeof body.pipe === "function" && !(body instanceof Readable)) {
+				const stream = new PassThrough();
+				body.pipe(stream);
+				const abort = body.abort;
+				if (abort) stream.once("close", () => abort());
+				body = stream;
+			}
+			this.#response = new NativeResponse(body, this.#headers ? {
+				...this.#init,
+				headers: this.#headers
+			} : this.#init);
+			this.#init = void 0;
+			this.#headers = void 0;
+			this.#body = void 0;
+			return this.#response;
+		}
+		_toNodeResponse() {
+			const status = this.status;
+			const statusText = this.statusText;
+			let body;
+			let contentType;
+			let contentLength;
+			if (this.#response) body = this.#response.body;
+			else if (this.#body) if (this.#body instanceof ReadableStream) body = this.#body;
+			else if (typeof this.#body === "string") {
+				body = this.#body;
+				contentType = "text/plain; charset=UTF-8";
+				contentLength = Buffer.byteLength(this.#body);
+			} else if (this.#body instanceof ArrayBuffer) {
+				body = Buffer.from(this.#body);
+				contentLength = this.#body.byteLength;
+			} else if (this.#body instanceof Uint8Array) {
+				body = this.#body;
+				contentLength = this.#body.byteLength;
+			} else if (this.#body instanceof DataView) {
+				body = Buffer.from(this.#body.buffer);
+				contentLength = this.#body.byteLength;
+			} else if (this.#body instanceof Blob) {
+				body = this.#body.stream();
+				contentType = this.#body.type;
+				contentLength = this.#body.size;
+			} else if (typeof this.#body.pipe === "function") body = this.#body;
+			else body = this._response.body;
+			const headers = [];
+			const initHeaders = this.#init?.headers;
+			const headerEntries = this.#response?.headers || this.#headers || (initHeaders ? Array.isArray(initHeaders) ? initHeaders : initHeaders?.entries ? initHeaders.entries() : Object.entries(initHeaders).map(([k, v]) => [k.toLowerCase(), v]) : void 0);
+			let hasContentTypeHeader;
+			let hasContentLength;
+			if (headerEntries) for (const [key, value] of headerEntries) {
+				if (Array.isArray(value)) for (const v of value) headers.push([key, v]);
+				else headers.push([key, value]);
+				if (key === "content-type") hasContentTypeHeader = true;
+				else if (key === "content-length") hasContentLength = true;
+			}
+			if (contentType && !hasContentTypeHeader) headers.push(["content-type", contentType]);
+			if (contentLength && !hasContentLength) headers.push(["content-length", String(contentLength)]);
+			this.#init = void 0;
+			this.#headers = void 0;
+			this.#response = void 0;
+			this.#body = void 0;
+			return {
+				status,
+				statusText,
+				headers,
+				body
+			};
+		}
+	}
+	lazyInherit(NodeResponse.prototype, NativeResponse.prototype, "_response");
+	Object.setPrototypeOf(NodeResponse, NativeResponse);
+	Object.setPrototypeOf(NodeResponse.prototype, NativeResponse.prototype);
+	return NodeResponse;
+})();
 //#endregion
 //#region node_modules/h3-v2/dist/h3-Bz4OPZv_.mjs
 function decodePathname(pathname) {
@@ -318,7 +431,7 @@ var HTTPResponse = class {
 	}
 };
 function prepareResponse(val, event, config, nested) {
-	if (val === kHandled) return new FastResponse(null);
+	if (val === kHandled) return new NodeResponse(null);
 	if (val === kNotFound) val = new HTTPError({
 		status: 404,
 		message: `Cannot find any route matching [${event.req.method}] ${event.url}`
@@ -341,7 +454,7 @@ function prepareResponse(val, event, config, nested) {
 	if (!(val instanceof Response)) {
 		const res = prepareResponseBody(val, event, config);
 		const status = res.status || preparedRes?.status;
-		return new FastResponse(nullBody(event.req.method, status) ? null : res.body, {
+		return new NodeResponse(nullBody(event.req.method, status) ? null : res.body, {
 			status,
 			statusText: res.statusText || preparedRes?.statusText,
 			headers: res.headers && preparedHeaders ? mergeHeaders$1(res.headers, preparedHeaders) : res.headers || preparedHeaders
@@ -352,7 +465,7 @@ function prepareResponse(val, event, config, nested) {
 		mergeHeaders$1(val.headers, preparedHeaders, val.headers);
 		return val;
 	} catch {
-		return new FastResponse(nullBody(event.req.method, val.status) ? null : val.body, {
+		return new NodeResponse(nullBody(event.req.method, val.status) ? null : val.body, {
 			status: val.status,
 			statusText: val.statusText,
 			headers: mergeHeaders$1(val.headers, preparedHeaders)
@@ -419,7 +532,7 @@ function nullBody(method, status) {
 function errorResponse(error, debug, errHeaders) {
 	let headers = error.headers ? mergeHeaders$1(jsonHeaders, error.headers) : new Headers(jsonHeaders);
 	if (errHeaders) headers = mergeHeaders$1(headers, errHeaders);
-	return new FastResponse(JSON.stringify({
+	return new NodeResponse(JSON.stringify({
 		...error.toJSON(),
 		stack: debug && error.stack ? error.stack.split("\n").map((l) => l.trim()) : void 0
 	}, void 0, debug ? 2 : void 0), {
