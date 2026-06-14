@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
 import { Route as AuthenticatedDlcsRouteImport } from './routes/_authenticated/dlcs'
+import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -46,6 +47,11 @@ const AuthenticatedDlcsRoute = AuthenticatedDlcsRouteImport.update({
   path: '/dlcs',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCharactersRoute = AuthenticatedCharactersRouteImport.update({
+  id: '/characters',
+  path: '/characters',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedNewsIdRoute = AuthenticatedNewsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/characters': typeof AuthenticatedCharactersRoute
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/news/$id': typeof AuthenticatedNewsIdRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/characters': typeof AuthenticatedCharactersRoute
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
@@ -73,6 +81,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/characters': typeof AuthenticatedCharactersRoute
   '/_authenticated/dlcs': typeof AuthenticatedDlcsRoute
   '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -80,14 +89,29 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dlcs' | '/news' | '/news/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/characters'
+    | '/dlcs'
+    | '/news'
+    | '/news/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/reset-password' | '/dlcs' | '/news' | '/' | '/news/$id'
+  to:
+    | '/auth'
+    | '/reset-password'
+    | '/characters'
+    | '/dlcs'
+    | '/news'
+    | '/'
+    | '/news/$id'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/characters'
     | '/_authenticated/dlcs'
     | '/_authenticated/news'
     | '/_authenticated/'
@@ -144,6 +168,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDlcsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/characters': {
+      id: '/_authenticated/characters'
+      path: '/characters'
+      fullPath: '/characters'
+      preLoaderRoute: typeof AuthenticatedCharactersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/news/$id': {
       id: '/_authenticated/news/$id'
       path: '/$id'
@@ -166,12 +197,14 @@ const AuthenticatedNewsRouteWithChildren =
   AuthenticatedNewsRoute._addFileChildren(AuthenticatedNewsRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCharactersRoute: typeof AuthenticatedCharactersRoute
   AuthenticatedDlcsRoute: typeof AuthenticatedDlcsRoute
   AuthenticatedNewsRoute: typeof AuthenticatedNewsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCharactersRoute: AuthenticatedCharactersRoute,
   AuthenticatedDlcsRoute: AuthenticatedDlcsRoute,
   AuthenticatedNewsRoute: AuthenticatedNewsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
