@@ -9,61 +9,447 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
+import { Route as AuthenticatedGuidesRouteImport } from './routes/_authenticated/guides'
+import { Route as AuthenticatedDlcsRouteImport } from './routes/_authenticated/dlcs'
+import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
+import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
+import { Route as AuthenticatedGuidesIndexRouteImport } from './routes/_authenticated/guides.index'
+import { Route as AuthenticatedCommunityIndexRouteImport } from './routes/_authenticated/community.index'
+import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
+import { Route as AuthenticatedGuidesNewRouteImport } from './routes/_authenticated/guides.new'
+import { Route as AuthenticatedGuidesIdRouteImport } from './routes/_authenticated/guides.$id'
+import { Route as AuthenticatedCommunityNewRouteImport } from './routes/_authenticated/community.new'
+import { Route as AuthenticatedCommunityCategoryRouteImport } from './routes/_authenticated/community.$category'
+import { Route as AuthenticatedCommunityPostIdRouteImport } from './routes/_authenticated/community.post.$id'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNewsRoute = AuthenticatedNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGuidesRoute = AuthenticatedGuidesRouteImport.update({
+  id: '/guides',
+  path: '/guides',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDlcsRoute = AuthenticatedDlcsRouteImport.update({
+  id: '/dlcs',
+  path: '/dlcs',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCommunityRoute = AuthenticatedCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCharactersRoute = AuthenticatedCharactersRouteImport.update({
+  id: '/characters',
+  path: '/characters',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGuidesIndexRoute =
+  AuthenticatedGuidesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedGuidesRoute,
+  } as any)
+const AuthenticatedCommunityIndexRoute =
+  AuthenticatedCommunityIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
+const AuthenticatedNewsIdRoute = AuthenticatedNewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedNewsRoute,
+} as any)
+const AuthenticatedGuidesNewRoute = AuthenticatedGuidesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedGuidesRoute,
+} as any)
+const AuthenticatedGuidesIdRoute = AuthenticatedGuidesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedGuidesRoute,
+} as any)
+const AuthenticatedCommunityNewRoute =
+  AuthenticatedCommunityNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
+const AuthenticatedCommunityCategoryRoute =
+  AuthenticatedCommunityCategoryRouteImport.update({
+    id: '/$category',
+    path: '/$category',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
+const AuthenticatedCommunityPostIdRoute =
+  AuthenticatedCommunityPostIdRouteImport.update({
+    id: '/post/$id',
+    path: '/post/$id',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/characters': typeof AuthenticatedCharactersRoute
+  '/community': typeof AuthenticatedCommunityRouteWithChildren
+  '/dlcs': typeof AuthenticatedDlcsRoute
+  '/guides': typeof AuthenticatedGuidesRouteWithChildren
+  '/news': typeof AuthenticatedNewsRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRoute
+  '/community/$category': typeof AuthenticatedCommunityCategoryRoute
+  '/community/new': typeof AuthenticatedCommunityNewRoute
+  '/guides/$id': typeof AuthenticatedGuidesIdRoute
+  '/guides/new': typeof AuthenticatedGuidesNewRoute
+  '/news/$id': typeof AuthenticatedNewsIdRoute
+  '/community/': typeof AuthenticatedCommunityIndexRoute
+  '/guides/': typeof AuthenticatedGuidesIndexRoute
+  '/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/characters': typeof AuthenticatedCharactersRoute
+  '/dlcs': typeof AuthenticatedDlcsRoute
+  '/news': typeof AuthenticatedNewsRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/community/$category': typeof AuthenticatedCommunityCategoryRoute
+  '/community/new': typeof AuthenticatedCommunityNewRoute
+  '/guides/$id': typeof AuthenticatedGuidesIdRoute
+  '/guides/new': typeof AuthenticatedGuidesNewRoute
+  '/news/$id': typeof AuthenticatedNewsIdRoute
+  '/community': typeof AuthenticatedCommunityIndexRoute
+  '/guides': typeof AuthenticatedGuidesIndexRoute
+  '/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/characters': typeof AuthenticatedCharactersRoute
+  '/_authenticated/community': typeof AuthenticatedCommunityRouteWithChildren
+  '/_authenticated/dlcs': typeof AuthenticatedDlcsRoute
+  '/_authenticated/guides': typeof AuthenticatedGuidesRouteWithChildren
+  '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/community/$category': typeof AuthenticatedCommunityCategoryRoute
+  '/_authenticated/community/new': typeof AuthenticatedCommunityNewRoute
+  '/_authenticated/guides/$id': typeof AuthenticatedGuidesIdRoute
+  '/_authenticated/guides/new': typeof AuthenticatedGuidesNewRoute
+  '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
+  '/_authenticated/community/': typeof AuthenticatedCommunityIndexRoute
+  '/_authenticated/guides/': typeof AuthenticatedGuidesIndexRoute
+  '/_authenticated/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/characters'
+    | '/community'
+    | '/dlcs'
+    | '/guides'
+    | '/news'
+    | '/profile'
+    | '/community/$category'
+    | '/community/new'
+    | '/guides/$id'
+    | '/guides/new'
+    | '/news/$id'
+    | '/community/'
+    | '/guides/'
+    | '/community/post/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/auth'
+    | '/reset-password'
+    | '/characters'
+    | '/dlcs'
+    | '/news'
+    | '/profile'
+    | '/'
+    | '/community/$category'
+    | '/community/new'
+    | '/guides/$id'
+    | '/guides/new'
+    | '/news/$id'
+    | '/community'
+    | '/guides'
+    | '/community/post/$id'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/characters'
+    | '/_authenticated/community'
+    | '/_authenticated/dlcs'
+    | '/_authenticated/guides'
+    | '/_authenticated/news'
+    | '/_authenticated/profile'
+    | '/_authenticated/'
+    | '/_authenticated/community/$category'
+    | '/_authenticated/community/new'
+    | '/_authenticated/guides/$id'
+    | '/_authenticated/guides/new'
+    | '/_authenticated/news/$id'
+    | '/_authenticated/community/'
+    | '/_authenticated/guides/'
+    | '/_authenticated/community/post/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/news': {
+      id: '/_authenticated/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof AuthenticatedNewsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/guides': {
+      id: '/_authenticated/guides'
+      path: '/guides'
+      fullPath: '/guides'
+      preLoaderRoute: typeof AuthenticatedGuidesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dlcs': {
+      id: '/_authenticated/dlcs'
+      path: '/dlcs'
+      fullPath: '/dlcs'
+      preLoaderRoute: typeof AuthenticatedDlcsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/community': {
+      id: '/_authenticated/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof AuthenticatedCommunityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/characters': {
+      id: '/_authenticated/characters'
+      path: '/characters'
+      fullPath: '/characters'
+      preLoaderRoute: typeof AuthenticatedCharactersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/guides/': {
+      id: '/_authenticated/guides/'
+      path: '/'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof AuthenticatedGuidesIndexRouteImport
+      parentRoute: typeof AuthenticatedGuidesRoute
+    }
+    '/_authenticated/community/': {
+      id: '/_authenticated/community/'
+      path: '/'
+      fullPath: '/community/'
+      preLoaderRoute: typeof AuthenticatedCommunityIndexRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
+    }
+    '/_authenticated/news/$id': {
+      id: '/_authenticated/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof AuthenticatedNewsIdRouteImport
+      parentRoute: typeof AuthenticatedNewsRoute
+    }
+    '/_authenticated/guides/new': {
+      id: '/_authenticated/guides/new'
+      path: '/new'
+      fullPath: '/guides/new'
+      preLoaderRoute: typeof AuthenticatedGuidesNewRouteImport
+      parentRoute: typeof AuthenticatedGuidesRoute
+    }
+    '/_authenticated/guides/$id': {
+      id: '/_authenticated/guides/$id'
+      path: '/$id'
+      fullPath: '/guides/$id'
+      preLoaderRoute: typeof AuthenticatedGuidesIdRouteImport
+      parentRoute: typeof AuthenticatedGuidesRoute
+    }
+    '/_authenticated/community/new': {
+      id: '/_authenticated/community/new'
+      path: '/new'
+      fullPath: '/community/new'
+      preLoaderRoute: typeof AuthenticatedCommunityNewRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
+    }
+    '/_authenticated/community/$category': {
+      id: '/_authenticated/community/$category'
+      path: '/$category'
+      fullPath: '/community/$category'
+      preLoaderRoute: typeof AuthenticatedCommunityCategoryRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
+    }
+    '/_authenticated/community/post/$id': {
+      id: '/_authenticated/community/post/$id'
+      path: '/post/$id'
+      fullPath: '/community/post/$id'
+      preLoaderRoute: typeof AuthenticatedCommunityPostIdRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
     }
   }
 }
 
+interface AuthenticatedCommunityRouteChildren {
+  AuthenticatedCommunityCategoryRoute: typeof AuthenticatedCommunityCategoryRoute
+  AuthenticatedCommunityNewRoute: typeof AuthenticatedCommunityNewRoute
+  AuthenticatedCommunityIndexRoute: typeof AuthenticatedCommunityIndexRoute
+  AuthenticatedCommunityPostIdRoute: typeof AuthenticatedCommunityPostIdRoute
+}
+
+const AuthenticatedCommunityRouteChildren: AuthenticatedCommunityRouteChildren =
+  {
+    AuthenticatedCommunityCategoryRoute: AuthenticatedCommunityCategoryRoute,
+    AuthenticatedCommunityNewRoute: AuthenticatedCommunityNewRoute,
+    AuthenticatedCommunityIndexRoute: AuthenticatedCommunityIndexRoute,
+    AuthenticatedCommunityPostIdRoute: AuthenticatedCommunityPostIdRoute,
+  }
+
+const AuthenticatedCommunityRouteWithChildren =
+  AuthenticatedCommunityRoute._addFileChildren(
+    AuthenticatedCommunityRouteChildren,
+  )
+
+interface AuthenticatedGuidesRouteChildren {
+  AuthenticatedGuidesIdRoute: typeof AuthenticatedGuidesIdRoute
+  AuthenticatedGuidesNewRoute: typeof AuthenticatedGuidesNewRoute
+  AuthenticatedGuidesIndexRoute: typeof AuthenticatedGuidesIndexRoute
+}
+
+const AuthenticatedGuidesRouteChildren: AuthenticatedGuidesRouteChildren = {
+  AuthenticatedGuidesIdRoute: AuthenticatedGuidesIdRoute,
+  AuthenticatedGuidesNewRoute: AuthenticatedGuidesNewRoute,
+  AuthenticatedGuidesIndexRoute: AuthenticatedGuidesIndexRoute,
+}
+
+const AuthenticatedGuidesRouteWithChildren =
+  AuthenticatedGuidesRoute._addFileChildren(AuthenticatedGuidesRouteChildren)
+
+interface AuthenticatedNewsRouteChildren {
+  AuthenticatedNewsIdRoute: typeof AuthenticatedNewsIdRoute
+}
+
+const AuthenticatedNewsRouteChildren: AuthenticatedNewsRouteChildren = {
+  AuthenticatedNewsIdRoute: AuthenticatedNewsIdRoute,
+}
+
+const AuthenticatedNewsRouteWithChildren =
+  AuthenticatedNewsRoute._addFileChildren(AuthenticatedNewsRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCharactersRoute: typeof AuthenticatedCharactersRoute
+  AuthenticatedCommunityRoute: typeof AuthenticatedCommunityRouteWithChildren
+  AuthenticatedDlcsRoute: typeof AuthenticatedDlcsRoute
+  AuthenticatedGuidesRoute: typeof AuthenticatedGuidesRouteWithChildren
+  AuthenticatedNewsRoute: typeof AuthenticatedNewsRouteWithChildren
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCharactersRoute: AuthenticatedCharactersRoute,
+  AuthenticatedCommunityRoute: AuthenticatedCommunityRouteWithChildren,
+  AuthenticatedDlcsRoute: AuthenticatedDlcsRoute,
+  AuthenticatedGuidesRoute: AuthenticatedGuidesRouteWithChildren,
+  AuthenticatedNewsRoute: AuthenticatedNewsRouteWithChildren,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
