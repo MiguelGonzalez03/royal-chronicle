@@ -22,6 +22,7 @@ import { Route as AuthenticatedGuidesIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedCommunityIndexRouteImport } from './routes/_authenticated/community.index'
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
 import { Route as AuthenticatedGuidesNewRouteImport } from './routes/_authenticated/guides.new'
+import { Route as AuthenticatedGuidesIdRouteImport } from './routes/_authenticated/guides.$id'
 import { Route as AuthenticatedCommunityNewRouteImport } from './routes/_authenticated/community.new'
 import { Route as AuthenticatedCommunityCategoryRouteImport } from './routes/_authenticated/community.$category'
 import { Route as AuthenticatedCommunityPostIdRouteImport } from './routes/_authenticated/community.post.$id'
@@ -92,6 +93,11 @@ const AuthenticatedGuidesNewRoute = AuthenticatedGuidesNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AuthenticatedGuidesRoute,
 } as any)
+const AuthenticatedGuidesIdRoute = AuthenticatedGuidesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedGuidesRoute,
+} as any)
 const AuthenticatedCommunityNewRoute =
   AuthenticatedCommunityNewRouteImport.update({
     id: '/new',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/community/new': typeof AuthenticatedCommunityNewRoute
+  '/guides/$id': typeof AuthenticatedGuidesIdRoute
   '/guides/new': typeof AuthenticatedGuidesNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community/': typeof AuthenticatedCommunityIndexRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/community/new': typeof AuthenticatedCommunityNewRoute
+  '/guides/$id': typeof AuthenticatedGuidesIdRoute
   '/guides/new': typeof AuthenticatedGuidesNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community': typeof AuthenticatedCommunityIndexRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/_authenticated/community/new': typeof AuthenticatedCommunityNewRoute
+  '/_authenticated/guides/$id': typeof AuthenticatedGuidesIdRoute
   '/_authenticated/guides/new': typeof AuthenticatedGuidesNewRoute
   '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
   '/_authenticated/community/': typeof AuthenticatedCommunityIndexRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/community/$category'
     | '/community/new'
+    | '/guides/$id'
     | '/guides/new'
     | '/news/$id'
     | '/community/'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/'
     | '/community/$category'
     | '/community/new'
+    | '/guides/$id'
     | '/guides/new'
     | '/news/$id'
     | '/community'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/community/$category'
     | '/_authenticated/community/new'
+    | '/_authenticated/guides/$id'
     | '/_authenticated/guides/new'
     | '/_authenticated/news/$id'
     | '/_authenticated/community/'
@@ -314,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGuidesNewRouteImport
       parentRoute: typeof AuthenticatedGuidesRoute
     }
+    '/_authenticated/guides/$id': {
+      id: '/_authenticated/guides/$id'
+      path: '/$id'
+      fullPath: '/guides/$id'
+      preLoaderRoute: typeof AuthenticatedGuidesIdRouteImport
+      parentRoute: typeof AuthenticatedGuidesRoute
+    }
     '/_authenticated/community/new': {
       id: '/_authenticated/community/new'
       path: '/new'
@@ -359,11 +378,13 @@ const AuthenticatedCommunityRouteWithChildren =
   )
 
 interface AuthenticatedGuidesRouteChildren {
+  AuthenticatedGuidesIdRoute: typeof AuthenticatedGuidesIdRoute
   AuthenticatedGuidesNewRoute: typeof AuthenticatedGuidesNewRoute
   AuthenticatedGuidesIndexRoute: typeof AuthenticatedGuidesIndexRoute
 }
 
 const AuthenticatedGuidesRouteChildren: AuthenticatedGuidesRouteChildren = {
+  AuthenticatedGuidesIdRoute: AuthenticatedGuidesIdRoute,
   AuthenticatedGuidesNewRoute: AuthenticatedGuidesNewRoute,
   AuthenticatedGuidesIndexRoute: AuthenticatedGuidesIndexRoute,
 }
