@@ -32,8 +32,6 @@ function NewPostPage() {
   const { data: user } = useCurrentUser();
   const [loading, setLoading] = useState(false);
 
-  const { data: cats } = useState<any[]>([])[0] ?? {} as any;
-  // simple inline fetch
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   useEffect(() => {
     supabase.from("forum_categories").select("id,name,slug").order("sort_order").then(({ data }) => {
