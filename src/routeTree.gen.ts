@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
 import { Route as AuthenticatedDlcsRouteImport } from './routes/_authenticated/dlcs'
+import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
 import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
 
@@ -47,6 +48,11 @@ const AuthenticatedDlcsRoute = AuthenticatedDlcsRouteImport.update({
   path: '/dlcs',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCommunityRoute = AuthenticatedCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCharactersRoute = AuthenticatedCharactersRouteImport.update({
   id: '/characters',
   path: '/characters',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/characters': typeof AuthenticatedCharactersRoute
+  '/community': typeof AuthenticatedCommunityRoute
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/news/$id': typeof AuthenticatedNewsIdRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/characters': typeof AuthenticatedCharactersRoute
+  '/community': typeof AuthenticatedCommunityRoute
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
@@ -82,6 +90,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/characters': typeof AuthenticatedCharactersRoute
+  '/_authenticated/community': typeof AuthenticatedCommunityRoute
   '/_authenticated/dlcs': typeof AuthenticatedDlcsRoute
   '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/characters'
+    | '/community'
     | '/dlcs'
     | '/news'
     | '/news/$id'
@@ -102,6 +112,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/characters'
+    | '/community'
     | '/dlcs'
     | '/news'
     | '/'
@@ -112,6 +123,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/characters'
+    | '/_authenticated/community'
     | '/_authenticated/dlcs'
     | '/_authenticated/news'
     | '/_authenticated/'
@@ -168,6 +180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDlcsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/community': {
+      id: '/_authenticated/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof AuthenticatedCommunityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/characters': {
       id: '/_authenticated/characters'
       path: '/characters'
@@ -198,6 +217,7 @@ const AuthenticatedNewsRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCharactersRoute: typeof AuthenticatedCharactersRoute
+  AuthenticatedCommunityRoute: typeof AuthenticatedCommunityRoute
   AuthenticatedDlcsRoute: typeof AuthenticatedDlcsRoute
   AuthenticatedNewsRoute: typeof AuthenticatedNewsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -205,6 +225,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCharactersRoute: AuthenticatedCharactersRoute,
+  AuthenticatedCommunityRoute: AuthenticatedCommunityRoute,
   AuthenticatedDlcsRoute: AuthenticatedDlcsRoute,
   AuthenticatedNewsRoute: AuthenticatedNewsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
