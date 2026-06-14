@@ -19,6 +19,7 @@ import { Route as AuthenticatedCommunityRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
 import { Route as AuthenticatedCommunityIndexRouteImport } from './routes/_authenticated/community.index'
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
+import { Route as AuthenticatedCommunityNewRouteImport } from './routes/_authenticated/community.new'
 import { Route as AuthenticatedCommunityCategoryRouteImport } from './routes/_authenticated/community.$category'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -71,6 +72,12 @@ const AuthenticatedNewsIdRoute = AuthenticatedNewsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthenticatedNewsRoute,
 } as any)
+const AuthenticatedCommunityNewRoute =
+  AuthenticatedCommunityNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
 const AuthenticatedCommunityCategoryRoute =
   AuthenticatedCommunityCategoryRouteImport.update({
     id: '/$category',
@@ -87,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/dlcs': typeof AuthenticatedDlcsRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/community/$category': typeof AuthenticatedCommunityCategoryRoute
+  '/community/new': typeof AuthenticatedCommunityNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community/': typeof AuthenticatedCommunityIndexRoute
 }
@@ -98,6 +106,7 @@ export interface FileRoutesByTo {
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
   '/community/$category': typeof AuthenticatedCommunityCategoryRoute
+  '/community/new': typeof AuthenticatedCommunityNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community': typeof AuthenticatedCommunityIndexRoute
 }
@@ -112,6 +121,7 @@ export interface FileRoutesById {
   '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/community/$category': typeof AuthenticatedCommunityCategoryRoute
+  '/_authenticated/community/new': typeof AuthenticatedCommunityNewRoute
   '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
   '/_authenticated/community/': typeof AuthenticatedCommunityIndexRoute
 }
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/dlcs'
     | '/news'
     | '/community/$category'
+    | '/community/new'
     | '/news/$id'
     | '/community/'
   fileRoutesByTo: FileRoutesByTo
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/'
     | '/community/$category'
+    | '/community/new'
     | '/news/$id'
     | '/community'
   id:
@@ -150,6 +162,7 @@ export interface FileRouteTypes {
     | '/_authenticated/news'
     | '/_authenticated/'
     | '/_authenticated/community/$category'
+    | '/_authenticated/community/new'
     | '/_authenticated/news/$id'
     | '/_authenticated/community/'
   fileRoutesById: FileRoutesById
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNewsIdRouteImport
       parentRoute: typeof AuthenticatedNewsRoute
     }
+    '/_authenticated/community/new': {
+      id: '/_authenticated/community/new'
+      path: '/new'
+      fullPath: '/community/new'
+      preLoaderRoute: typeof AuthenticatedCommunityNewRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
+    }
     '/_authenticated/community/$category': {
       id: '/_authenticated/community/$category'
       path: '/$category'
@@ -244,12 +264,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedCommunityRouteChildren {
   AuthenticatedCommunityCategoryRoute: typeof AuthenticatedCommunityCategoryRoute
+  AuthenticatedCommunityNewRoute: typeof AuthenticatedCommunityNewRoute
   AuthenticatedCommunityIndexRoute: typeof AuthenticatedCommunityIndexRoute
 }
 
 const AuthenticatedCommunityRouteChildren: AuthenticatedCommunityRouteChildren =
   {
     AuthenticatedCommunityCategoryRoute: AuthenticatedCommunityCategoryRoute,
+    AuthenticatedCommunityNewRoute: AuthenticatedCommunityNewRoute,
     AuthenticatedCommunityIndexRoute: AuthenticatedCommunityIndexRoute,
   }
 
