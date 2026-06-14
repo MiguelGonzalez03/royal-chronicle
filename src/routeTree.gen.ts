@@ -18,6 +18,7 @@ import { Route as AuthenticatedGuidesRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDlcsRouteImport } from './routes/_authenticated/dlcs'
 import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
 import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
+import { Route as AuthenticatedGuidesIndexRouteImport } from './routes/_authenticated/guides.index'
 import { Route as AuthenticatedCommunityIndexRouteImport } from './routes/_authenticated/community.index'
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
 import { Route as AuthenticatedCommunityNewRouteImport } from './routes/_authenticated/community.new'
@@ -68,6 +69,12 @@ const AuthenticatedCharactersRoute = AuthenticatedCharactersRouteImport.update({
   path: '/characters',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGuidesIndexRoute =
+  AuthenticatedGuidesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedGuidesRoute,
+  } as any)
 const AuthenticatedCommunityIndexRoute =
   AuthenticatedCommunityIndexRouteImport.update({
     id: '/',
@@ -105,12 +112,13 @@ export interface FileRoutesByFullPath {
   '/characters': typeof AuthenticatedCharactersRoute
   '/community': typeof AuthenticatedCommunityRouteWithChildren
   '/dlcs': typeof AuthenticatedDlcsRoute
-  '/guides': typeof AuthenticatedGuidesRoute
+  '/guides': typeof AuthenticatedGuidesRouteWithChildren
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/community/new': typeof AuthenticatedCommunityNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community/': typeof AuthenticatedCommunityIndexRoute
+  '/guides/': typeof AuthenticatedGuidesIndexRoute
   '/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRoutesByTo {
@@ -118,13 +126,13 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/characters': typeof AuthenticatedCharactersRoute
   '/dlcs': typeof AuthenticatedDlcsRoute
-  '/guides': typeof AuthenticatedGuidesRoute
   '/news': typeof AuthenticatedNewsRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
   '/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/community/new': typeof AuthenticatedCommunityNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community': typeof AuthenticatedCommunityIndexRoute
+  '/guides': typeof AuthenticatedGuidesIndexRoute
   '/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRoutesById {
@@ -135,13 +143,14 @@ export interface FileRoutesById {
   '/_authenticated/characters': typeof AuthenticatedCharactersRoute
   '/_authenticated/community': typeof AuthenticatedCommunityRouteWithChildren
   '/_authenticated/dlcs': typeof AuthenticatedDlcsRoute
-  '/_authenticated/guides': typeof AuthenticatedGuidesRoute
+  '/_authenticated/guides': typeof AuthenticatedGuidesRouteWithChildren
   '/_authenticated/news': typeof AuthenticatedNewsRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/community/$category': typeof AuthenticatedCommunityCategoryRoute
   '/_authenticated/community/new': typeof AuthenticatedCommunityNewRoute
   '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
   '/_authenticated/community/': typeof AuthenticatedCommunityIndexRoute
+  '/_authenticated/guides/': typeof AuthenticatedGuidesIndexRoute
   '/_authenticated/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRouteTypes {
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/community/new'
     | '/news/$id'
     | '/community/'
+    | '/guides/'
     | '/community/post/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -166,13 +176,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/characters'
     | '/dlcs'
-    | '/guides'
     | '/news'
     | '/'
     | '/community/$category'
     | '/community/new'
     | '/news/$id'
     | '/community'
+    | '/guides'
     | '/community/post/$id'
   id:
     | '__root__'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/_authenticated/community/new'
     | '/_authenticated/news/$id'
     | '/_authenticated/community/'
+    | '/_authenticated/guides/'
     | '/_authenticated/community/post/$id'
   fileRoutesById: FileRoutesById
 }
@@ -263,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCharactersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/guides/': {
+      id: '/_authenticated/guides/'
+      path: '/'
+      fullPath: '/guides/'
+      preLoaderRoute: typeof AuthenticatedGuidesIndexRouteImport
+      parentRoute: typeof AuthenticatedGuidesRoute
+    }
     '/_authenticated/community/': {
       id: '/_authenticated/community/'
       path: '/'
@@ -321,6 +339,17 @@ const AuthenticatedCommunityRouteWithChildren =
     AuthenticatedCommunityRouteChildren,
   )
 
+interface AuthenticatedGuidesRouteChildren {
+  AuthenticatedGuidesIndexRoute: typeof AuthenticatedGuidesIndexRoute
+}
+
+const AuthenticatedGuidesRouteChildren: AuthenticatedGuidesRouteChildren = {
+  AuthenticatedGuidesIndexRoute: AuthenticatedGuidesIndexRoute,
+}
+
+const AuthenticatedGuidesRouteWithChildren =
+  AuthenticatedGuidesRoute._addFileChildren(AuthenticatedGuidesRouteChildren)
+
 interface AuthenticatedNewsRouteChildren {
   AuthenticatedNewsIdRoute: typeof AuthenticatedNewsIdRoute
 }
@@ -336,7 +365,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCharactersRoute: typeof AuthenticatedCharactersRoute
   AuthenticatedCommunityRoute: typeof AuthenticatedCommunityRouteWithChildren
   AuthenticatedDlcsRoute: typeof AuthenticatedDlcsRoute
-  AuthenticatedGuidesRoute: typeof AuthenticatedGuidesRoute
+  AuthenticatedGuidesRoute: typeof AuthenticatedGuidesRouteWithChildren
   AuthenticatedNewsRoute: typeof AuthenticatedNewsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
@@ -345,7 +374,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCharactersRoute: AuthenticatedCharactersRoute,
   AuthenticatedCommunityRoute: AuthenticatedCommunityRouteWithChildren,
   AuthenticatedDlcsRoute: AuthenticatedDlcsRoute,
-  AuthenticatedGuidesRoute: AuthenticatedGuidesRoute,
+  AuthenticatedGuidesRoute: AuthenticatedGuidesRouteWithChildren,
   AuthenticatedNewsRoute: AuthenticatedNewsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
