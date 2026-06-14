@@ -21,6 +21,7 @@ import { Route as AuthenticatedCommunityIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedNewsIdRouteImport } from './routes/_authenticated/news.$id'
 import { Route as AuthenticatedCommunityNewRouteImport } from './routes/_authenticated/community.new'
 import { Route as AuthenticatedCommunityCategoryRouteImport } from './routes/_authenticated/community.$category'
+import { Route as AuthenticatedCommunityPostIdRouteImport } from './routes/_authenticated/community.post.$id'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -84,6 +85,12 @@ const AuthenticatedCommunityCategoryRoute =
     path: '/$category',
     getParentRoute: () => AuthenticatedCommunityRoute,
   } as any)
+const AuthenticatedCommunityPostIdRoute =
+  AuthenticatedCommunityPostIdRouteImport.update({
+    id: '/post/$id',
+    path: '/post/$id',
+    getParentRoute: () => AuthenticatedCommunityRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/community/new': typeof AuthenticatedCommunityNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community/': typeof AuthenticatedCommunityIndexRoute
+  '/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -109,6 +117,7 @@ export interface FileRoutesByTo {
   '/community/new': typeof AuthenticatedCommunityNewRoute
   '/news/$id': typeof AuthenticatedNewsIdRoute
   '/community': typeof AuthenticatedCommunityIndexRoute
+  '/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,6 +133,7 @@ export interface FileRoutesById {
   '/_authenticated/community/new': typeof AuthenticatedCommunityNewRoute
   '/_authenticated/news/$id': typeof AuthenticatedNewsIdRoute
   '/_authenticated/community/': typeof AuthenticatedCommunityIndexRoute
+  '/_authenticated/community/post/$id': typeof AuthenticatedCommunityPostIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/community/new'
     | '/news/$id'
     | '/community/'
+    | '/community/post/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/community/new'
     | '/news/$id'
     | '/community'
+    | '/community/post/$id'
   id:
     | '__root__'
     | '/_authenticated'
@@ -165,6 +177,7 @@ export interface FileRouteTypes {
     | '/_authenticated/community/new'
     | '/_authenticated/news/$id'
     | '/_authenticated/community/'
+    | '/_authenticated/community/post/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -259,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommunityCategoryRouteImport
       parentRoute: typeof AuthenticatedCommunityRoute
     }
+    '/_authenticated/community/post/$id': {
+      id: '/_authenticated/community/post/$id'
+      path: '/post/$id'
+      fullPath: '/community/post/$id'
+      preLoaderRoute: typeof AuthenticatedCommunityPostIdRouteImport
+      parentRoute: typeof AuthenticatedCommunityRoute
+    }
   }
 }
 
@@ -266,6 +286,7 @@ interface AuthenticatedCommunityRouteChildren {
   AuthenticatedCommunityCategoryRoute: typeof AuthenticatedCommunityCategoryRoute
   AuthenticatedCommunityNewRoute: typeof AuthenticatedCommunityNewRoute
   AuthenticatedCommunityIndexRoute: typeof AuthenticatedCommunityIndexRoute
+  AuthenticatedCommunityPostIdRoute: typeof AuthenticatedCommunityPostIdRoute
 }
 
 const AuthenticatedCommunityRouteChildren: AuthenticatedCommunityRouteChildren =
@@ -273,6 +294,7 @@ const AuthenticatedCommunityRouteChildren: AuthenticatedCommunityRouteChildren =
     AuthenticatedCommunityCategoryRoute: AuthenticatedCommunityCategoryRoute,
     AuthenticatedCommunityNewRoute: AuthenticatedCommunityNewRoute,
     AuthenticatedCommunityIndexRoute: AuthenticatedCommunityIndexRoute,
+    AuthenticatedCommunityPostIdRoute: AuthenticatedCommunityPostIdRoute,
   }
 
 const AuthenticatedCommunityRouteWithChildren =
@@ -318,3 +340,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
